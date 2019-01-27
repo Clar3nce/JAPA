@@ -16,12 +16,11 @@ japa_client_discord = discord.Client()
 def log_message(msgLog,message):
     msgLog.append(message)
 
-@asyncio.coroutine
-def clearChat(channel):
-    log = yield from japa_client_discord.logs_from(channel)
-
-    for message in log:
-           japa_client_discord.delete_message(message.content)
+@japa_client_discord.event
+async def clearChat(channel):
+    async for message in japa_client_discord.logs_from(channel,limit=100):
+        await japa_client_discord.delete_message(message)
+        print(message.content)
 
 
 
@@ -61,7 +60,7 @@ async def on_message(message):
         elif msg == "clear":
             msg = "Clearing Chat {0.author.mention}".format(message)
             await japa_client_discord.send_message(message.channel, msg)
-            clearChat(message.channel)
+            await clearChat(message.channel)
 
 
 
