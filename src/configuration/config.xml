@@ -1,14 +1,13 @@
 <?xml version="1.0"?>
-<configuration name="config">
-    <local_serv>
+<configuration>
+    <local_serv name ="default">
         <local_ip>127.0.0.1</local_ip>
         <local_port>6666</local_port>
     </local_serv>
-    <remote_interface>
-        <command_channel>discord</command_channel>
+    <remote_interface name="discord">
         <server_id>GdDXxZ</server_id>
         <bot_token>NTM5MDk5OTQ2ODU1NTYzMjY1.Dy9btA.AZQP6DyHrqmWm6ndv9Yt-zrIAts</bot_token>
-        <command_indentifier>!</command_identifier>
+        <command_identifier>&#33;</command_identifier>
     </remote_interface>
 
     <!---
@@ -24,7 +23,7 @@
         default priv = 2
     
     -->
-    <security>
+    <security name="privs">
         <priv_level>1</priv_level>
     </security>
 </configuration>
