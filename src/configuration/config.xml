@@ -1,0 +1,23 @@
+<configuration>
+    <local_ip>127.0.0.1</local_ip>
+    <local_port>6666</local_port>
+    <command_channel>discord</command_channel>
+    <server_id>GdDXxZ</server_id>
+    <bot_token>NTM5MDk5OTQ2ODU1NTYzMjY1.Dy9btA.AZQP6DyHrqmWm6ndv9Yt-zrIAts</bot_token>
+    <command_indentifier>!</command_identifier>
+
+    <!---
+
+                describes the current priv leve lthe bot has acces to.
+    |=====================================================================================================================================
+    |priv  | 1 | highest priv level can change all asspects of the server and interact with all elements                                  |
+    |======|===|==========================================================================================================================|
+    |priv  | 2 | designates the bot to have the ability to modderate other users and restricts access to some commands that can be abused |
+    |=====================================================================================================================================|
+    |priv  | 3 | designates the bot to have minimal privs and cannot control other users permissions                                      |
+    |=====================================================================================================================================|
+        default priv = 2
+    
+    -->
+    <priv_level>1</priv_level>
+</configuration>
