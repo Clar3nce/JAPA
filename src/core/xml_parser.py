@@ -33,12 +33,3 @@ def load_Default_Config(configPath):
 
 
 
-default_config_path = "configuration/config.xml"
-
-config = load_Default_Config(default_config_path)
-
-print(config.remote_interface_token)
-print(config.command_identifier)
-
-
-

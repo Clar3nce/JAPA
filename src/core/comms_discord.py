@@ -1,8 +1,18 @@
 import discord
 import asyncio
+from xml_parser import CONFIG
+from xml_parser import load_Default_Config
+from dbg_logging import write_to_log
+from dbg_logging import enable_logging
+from dbg_logging import disable_logging
+from dbg_logging import LOGGING
+
+
 #import async
 
-TOKEN = "NTM5MDk5OTQ2ODU1NTYzMjY1.Dy9btA.AZQP6DyHrqmWm6ndv9Yt-zrIAts"
+DEFAULT_CONFIG_PATH = "../configuration/config.xml"
+
+cfg = load_Default_Config(DEFAULT_CONFIG_PATH)
 
 
 def init_client():
@@ -40,18 +50,53 @@ async def clearChat(channel, length):
 
 @japa_client_discord.event
 async def on_message(message):
+
+    #message.author is the same as bot username -> ignore my own messages
     if message.author == japa_client_discord.user:
         return
-    if message.content.startswith("!cmd"):
+    #message starts with the command Identifier and is of the <cmd> command set
+    if message.content.startswith(cfg.command_identifier+"cmd"):
+        #split the message on ' ' to create an array of params
         msg_parts = message.content.split(" ")
+        #check if the string following command identifier is a valid command 
         command = isCommand(msg_parts[1])
+
+        #not valid command
         if command == "invalid":
-            msg = "Invalid Command {0.author.mention}".format(message)
-            await japa_client_discord.send_message(message.channel, msg)
+            #check is verbose loggin is enabled
+            if LOGGING == True:
+                #write to log
+                await write_to_log("Invalid Command Entered",False)
+        #valid command found 
         elif command == "clear":
-            msg = "Clearing Chat {0.author.mention}".format(message)
-            await japa_client_discord.send_message(message.channel, msg)
-            await clearChat(message.channel,msg_parts[2])
+            if LOGGING == True:
+                #write to log
+                await write_to_log("Clearing Chat", False)
+            #execute command function
+            if len(msg_parts) >2:
+                await clearChat(message.channel,msg_parts[2])
+            else:
+                await clearChat(message.channel,10)
+
+
+
+    #check to see if the message starts with the command identifier and is part of the <debug/logging> command set
+    elif message.content.startswith(cfg.command_identifier+"logging"):
+        #split message into array on ' '
+        msg_parts = message.content.split(" ")
+        #extract the value that determines if LOGGING = True OR LOGGING = False
+        logging_status = msg_parts[1]
+        #LOGGING = True
+        if logging_status == "enable":
+            if len(msg_parts) > 2:
+                #enable logging and set LOGGING_CHANNEL
+                print(msg_parts[2])
+                
+                await enable_logging(msg_parts[2])
+                await japa_client_discord.send_message(message.channel, "Enabled Logging")
+        else:
+            #LOGGING = False
+            await disable_logging()
 
 
 
@@ -64,4 +109,4 @@ async def on_ready():
 
 
 
-japa_client_discord.run(TOKEN)
+japa_client_discord.run(cfg.remote_interface_token)
