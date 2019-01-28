@@ -4,13 +4,13 @@ from xml_parser import CONFIG
 from xml_parser import load_Default_Config
 from dbg_logging import write_to_log
 from dbg_logging import enable_logging
-from dbg_logging import disable_logging
-from dbg_logging import LOGGING
 
 
 #import async
 
 DEFAULT_CONFIG_PATH = "../configuration/config.xml"
+LOGGING_CHANNEL = 0
+LOGGING = False
 
 cfg = load_Default_Config(DEFAULT_CONFIG_PATH)
 
@@ -50,7 +50,8 @@ async def clearChat(channel, length):
 
 @japa_client_discord.event
 async def on_message(message):
-
+    global LOGGING
+    global LOGGING_CHANNEL
     #message.author is the same as bot username -> ignore my own messages
     if message.author == japa_client_discord.user:
         return
@@ -66,12 +67,12 @@ async def on_message(message):
             #check is verbose loggin is enabled
             if LOGGING == True:
                 #write to log
-                await write_to_log("Invalid Command Entered",False)
+                await write_to_log("Invalid Command Entered",False,LOGGING_CHANNEL)
         #valid command found 
         elif command == "clear":
             if LOGGING == True:
                 #write to log
-                await write_to_log("Clearing Chat", False)
+                await write_to_log("Clearing Chat", False,LOGGING_CHANNEL)
             #execute command function
             if len(msg_parts) >2:
                 await clearChat(message.channel,msg_parts[2])
@@ -89,14 +90,18 @@ async def on_message(message):
         #LOGGING = True
         if logging_status == "enable":
             if len(msg_parts) > 2:
+                LOGGING = True
                 #enable logging and set LOGGING_CHANNEL
-                print(msg_parts[2])
-                
-                await enable_logging(msg_parts[2])
+#                print(msg_parts[2])
+                LOGGING_CHANNEL = await enable_logging(msg_parts[2])
                 await japa_client_discord.send_message(message.channel, "Enabled Logging")
-        else:
-            #LOGGING = False
-            await disable_logging()
+            else:
+                LOGGING_CHANNEL = "logs"
+                await japa_client_discord.send_message(message.channel, "Enabled Logging")
+        elif logging_status == "disable":
+            LOGGING = False
+            await japa_client_discord.send_message(message.channel, "Enabled Disabled")
+
 
 
 
